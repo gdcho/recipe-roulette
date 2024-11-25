@@ -7,6 +7,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,16 +19,15 @@ import com.example.myminiappdavid.ui.screens.InputIngredientsScreen
 import com.example.myminiappdavid.ui.screens.MealDetailScreen
 import com.example.myminiappdavid.ui.screens.RandomMealScreen
 import com.example.myminiappdavid.viewmodels.MealViewModel
-import com.example.myminiappdavid.main.IngredientState
-import com.example.myminiappdavid.main.IngredientsAddedState
+import com.example.myminiappdavid.state.IngredientState
+import com.example.myminiappdavid.state.IngredientsAddedState
 
 sealed class Screen(val route: String, val title: String = "", val icon: Int? = null) {
     object RandomMeal : Screen("randomMeal", "Random", android.R.drawable.ic_menu_search)
     object InputIngredients :
         Screen("inputIngredients", "Ingredients", android.R.drawable.ic_menu_edit)
 
-    object FilteredMeals :
-        Screen("filteredMeals", "Meals", android.R.drawable.ic_menu_info_details)
+    object FilteredMeals : Screen("filteredMeals", "Meals", android.R.drawable.ic_menu_info_details)
 
     object MealDetail : Screen("mealDetail/{mealId}") {
         fun createRoute(mealId: String) = "mealDetail/$mealId"
@@ -51,33 +52,26 @@ fun AppNavigation(
                 RandomMealScreen(mealViewModel)
             }
             composable(Screen.InputIngredients.route) {
-                InputIngredientsScreen(
-                    ingredientState = ingredientState,
+                InputIngredientsScreen(ingredientState = ingredientState,
                     ingredientsAddedState = ingredientsAddedState,
                     viewModel = mealViewModel,
                     onMealClick = { mealId ->
                         navController.navigate(Screen.MealDetail.createRoute(mealId))
-                    }
-                )
+                    })
             }
             composable(Screen.FilteredMeals.route) {
-                FilteredMealsScreen(
-                    viewModel = mealViewModel,
-                    onMealClick = { mealId ->
-                        navController.navigate(Screen.MealDetail.createRoute(mealId))
-                    }
-                )
+                FilteredMealsScreen(viewModel = mealViewModel, onMealClick = { mealId ->
+                    navController.navigate(Screen.MealDetail.createRoute(mealId))
+                })
             }
             composable(
                 route = Screen.MealDetail.route,
                 arguments = listOf(navArgument("mealId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val mealId = backStackEntry.arguments?.getString("mealId") ?: ""
-                MealDetailScreen(
-                    mealId = mealId,
+                MealDetailScreen(mealId = mealId,
                     viewModel = mealViewModel,
-                    onBack = { navController.popBackStack() }
-                )
+                    onBack = { navController.popBackStack() })
             }
         }
     }
@@ -89,31 +83,41 @@ fun BottomBar(navController: NavHostController) {
         Screen.RandomMeal, Screen.InputIngredients, Screen.FilteredMeals
     )
 
-    BottomNavigation {
+    BottomNavigation(backgroundColor = Color(0xFF6751A5)) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
         items.forEach { screen ->
-            BottomNavigationItem(
-                icon = {
-                    screen.icon?.let {
-                        Icon(
-                            painter = androidx.compose.ui.res.painterResource(id = it),
-                            contentDescription = screen.title
-                        )
-                    }
+            val isSelected = currentRoute == screen.route
+            BottomNavigationItem(icon = {
+                screen.icon?.let {
+                    Icon(
+                        painter = androidx.compose.ui.res.painterResource(id = it),
+                        contentDescription = screen.title,
+                        tint = if (isSelected) Color.White else Color.Gray
+                    )
+                }
+            },
+                label = {
+                    Text(
+                        text = screen.title,
+                        color = if (isSelected) Color.White else Color.Gray,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                    )
                 },
-                label = { Text(screen.title) },
-                selected = currentRoute == screen.route,
+                selected = isSelected,
                 onClick = {
-                    if (currentRoute != screen.route) {
+                    if (!isSelected) {
                         navController.navigate(screen.route) {
                             launchSingleTop = true
                             restoreState = true
                         }
                     }
-                }
+                },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = Color.Gray
             )
+
         }
     }
 }

@@ -7,8 +7,8 @@ import com.example.myminiappdavid.api.MealApiService
 import com.example.myminiappdavid.navigation.AppNavigation
 import com.example.myminiappdavid.viewmodels.MealViewModel
 import androidx.compose.runtime.remember
-import com.example.myminiappdavid.main.IngredientState
-import com.example.myminiappdavid.main.IngredientsAddedState
+import com.example.myminiappdavid.state.IngredientState
+import com.example.myminiappdavid.state.IngredientsAddedState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

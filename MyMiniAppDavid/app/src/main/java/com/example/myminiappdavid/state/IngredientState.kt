@@ -1,4 +1,4 @@
-package com.example.myminiappdavid.main
+package com.example.myminiappdavid.state
 
 import androidx.compose.runtime.toMutableStateList
 import com.example.myminiappdavid.data.LocalIngredients

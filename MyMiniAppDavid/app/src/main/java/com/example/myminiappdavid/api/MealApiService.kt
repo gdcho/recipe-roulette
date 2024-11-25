@@ -12,7 +12,7 @@ class MealApiService {
     private val client = HttpClient {
         install(ContentNegotiation) {
             json(Json {
-                ignoreUnknownKeys = true // This tells the parser to ignore unknown keys
+                ignoreUnknownKeys = true
             })
         }
     }
@@ -27,12 +27,14 @@ class MealApiService {
 
     suspend fun searchMealsByName(query: String): MealResponse {
         val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
-        return client.get("https://www.themealdb.com/api/json/v1/1/search.php?s=$encodedQuery").body()
+        return client.get("https://www.themealdb.com/api/json/v1/1/search.php?s=$encodedQuery")
+            .body()
     }
 
     suspend fun getMealsByIngredient(ingredient: String): MealsListResponse {
         val encodedIngredient = java.net.URLEncoder.encode(ingredient, "UTF-8")
-        return client.get("https://www.themealdb.com/api/json/v1/1/filter.php?i=$encodedIngredient").body()
+        return client.get("https://www.themealdb.com/api/json/v1/1/filter.php?i=$encodedIngredient")
+            .body()
     }
 
     suspend fun getMealDetails(id: String): MealResponse {
@@ -106,10 +108,10 @@ data class Meal(
 ) {
     fun getIngredientList(): List<String> {
         return (1..20).mapNotNull { index ->
-            val ingredient = this::class.members.find { it.name == "strIngredient$index" }
-                ?.call(this) as? String
-            val measure = this::class.members.find { it.name == "strMeasure$index" }
-                ?.call(this) as? String
+            val ingredient =
+                this::class.members.find { it.name == "strIngredient$index" }?.call(this) as? String
+            val measure =
+                this::class.members.find { it.name == "strMeasure$index" }?.call(this) as? String
             if (!ingredient.isNullOrBlank()) {
                 if (!measure.isNullOrBlank()) {
                     "$ingredient - $measure"

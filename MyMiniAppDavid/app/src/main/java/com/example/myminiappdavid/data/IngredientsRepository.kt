@@ -6,11 +6,11 @@ class IngredientsRepository(private val ingredientsDAO: IngredientsDAO) {
         return ingredientsDAO.getAll()
     }
 
-    fun deleteEntity(user: LocalIngredients) {
-        ingredientsDAO.delete(user)
+    fun deleteEntity(ingredients: LocalIngredients) {
+        ingredientsDAO.delete(ingredients)
     }
 
-    fun add(user: LocalIngredients) {
-        ingredientsDAO.add(user)
+    fun add(ingredients: LocalIngredients) {
+        ingredientsDAO.add(ingredients)
     }
 }
