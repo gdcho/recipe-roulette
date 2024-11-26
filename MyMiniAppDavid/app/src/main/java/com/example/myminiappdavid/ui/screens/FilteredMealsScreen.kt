@@ -20,11 +20,22 @@ fun FilteredMealsScreen(viewModel: MealViewModel, onMealClick: (String) -> Unit)
     val searchResults by viewModel.searchResults.collectAsState()
     val isSearchLoading by viewModel.searchLoading.collectAsState()
     val categories = listOf(
-        "Beef", "Breakfast", "Chicken", "Dessert", "Goat", "Lamb",
-        "Pasta", "Pork", "Seafood", "Side", "Starter", "Vegan", "Vegetarian"
+        "Beef",
+        "Breakfast",
+        "Chicken",
+        "Dessert",
+        "Goat",
+        "Lamb",
+        "Pasta",
+        "Pork",
+        "Seafood",
+        "Side",
+        "Starter",
+        "Vegan",
+        "Vegetarian"
     )
     var selectedCategory by remember { mutableStateOf(categories.first()) }
-    var searchQuery by remember { mutableStateOf("") }
+    var searchQuery by viewModel.searchQuery
     var isSearchActive by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedCategory) {
@@ -33,31 +44,34 @@ fun FilteredMealsScreen(viewModel: MealViewModel, onMealClick: (String) -> Unit)
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("All Meals", color = Color.White) },
-                backgroundColor = Color(0xFF6751A5)
-            )
-        }
-    ) { paddingValues ->
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text("All Meals", color = Color.White) },
+            backgroundColor = Color(0xFF6751A5)
+        )
+    }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(20.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
 
             MealSearchBar(
                 searchQuery = searchQuery,
-                onSearchQueryChange = { searchQuery = it },
+                onSearchQueryChange = {
+                    viewModel.updateSearchQuery(it)
+                },
                 onSearch = {
                     isSearchActive = true
                     viewModel.searchMeals(searchQuery)
                 },
-                onClear = { searchQuery = "" }
+                onClear = {
+                    viewModel.updateSearchQuery("")
+                },
+                placeholder = "Search for meal",
+                buttonText = "Search"
             )
 
             CategorySelector(
@@ -77,8 +91,7 @@ fun FilteredMealsScreen(viewModel: MealViewModel, onMealClick: (String) -> Unit)
                 }
 
                 isSearchActive -> {
-                    SearchResultsSection(
-                        isSearchActive = isSearchActive,
+                    SearchResultsSection(isSearchActive = isSearchActive,
                         searchQuery = searchQuery,
                         searchResults = searchResults,
                         onMealClick = onMealClick,
@@ -87,8 +100,7 @@ fun FilteredMealsScreen(viewModel: MealViewModel, onMealClick: (String) -> Unit)
                             isSearchActive = false
                             viewModel.clearSearchResults()
                             viewModel.fetchMealsByCategory(selectedCategory)
-                        }
-                    )
+                        })
                 }
 
                 else -> {

@@ -25,8 +25,7 @@ fun SearchResultsSection(
     Column(modifier = modifier) {
         if (isSearchActive || searchResults.isNotEmpty()) {
             TextButton(
-                onClick = onClearSearch,
-                modifier = Modifier.align(Alignment.End)
+                onClick = onClearSearch, modifier = Modifier.align(Alignment.End)
             ) {
                 Text("Clear Search")
             }
@@ -37,15 +36,13 @@ fun SearchResultsSection(
                 Text("Search Results:", style = MaterialTheme.typography.h6)
                 Spacer(modifier = Modifier.height(8.dp))
                 MealList(
-                    meals = searchResults,
-                    onMealClick = onMealClick
+                    meals = searchResults, onMealClick = onMealClick
                 )
             }
 
             isSearchActive -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("No results found for \"$searchQuery\"")
                 }

@@ -30,13 +30,15 @@ fun RandomMealScreen(viewModel: MealViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { viewModel.fetchRandomMeal() },
-                modifier = Modifier.height(50.dp).padding(bottom = 8.dp),
+                modifier = Modifier
+                    .height(50.dp)
+                    .padding(bottom = 8.dp),
                 colors = ButtonDefaults.buttonColors(
                     contentColor = Color.White
                 ),

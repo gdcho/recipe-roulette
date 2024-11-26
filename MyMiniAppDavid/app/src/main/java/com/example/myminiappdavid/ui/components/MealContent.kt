@@ -4,12 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,28 +27,29 @@ import com.example.myminiappdavid.api.Meal
 fun MealContent(meal: Meal) {
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState()).padding(16.dp),
+            .verticalScroll(rememberScrollState())
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = meal.strMeal,
-            style = MaterialTheme.typography.h5,
-            textAlign = TextAlign.Center
+            text = meal.strMeal, style = MaterialTheme.typography.h5, textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(20.dp))
-        Box(
-            modifier = Modifier
-                .size(280.dp)
-                .clip(RoundedCornerShape(8.dp))
-
+        Card(
+            modifier = Modifier.size(280.dp), shape = RoundedCornerShape(8.dp), elevation = 6.dp
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(meal.strMealThumb),
-                contentDescription = "Meal Image",
-                modifier = Modifier.size(280.dp)
-            )
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(meal.strMealThumb),
+                    contentDescription = "Meal Image",
+                    modifier = Modifier.size(280.dp),
+                )
+            }
         }
+
         Spacer(modifier = Modifier.height(30.dp))
         Text(
             text = "Ingredients:",
@@ -72,7 +75,9 @@ fun MealContent(meal: Meal) {
         Text(
             text = meal.strInstructions ?: "No instructions available.",
             style = MaterialTheme.typography.body1,
-            modifier = Modifier.align(Alignment.Start)
+            modifier = Modifier
+                .align(Alignment.Start)
+                .padding(bottom = 10.dp)
         )
     }
 }

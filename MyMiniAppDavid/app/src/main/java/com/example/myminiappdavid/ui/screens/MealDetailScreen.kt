@@ -13,9 +13,7 @@ import com.example.myminiappdavid.viewmodels.MealViewModel
 
 @Composable
 fun MealDetailScreen(
-    mealId: String,
-    viewModel: MealViewModel,
-    onBack: () -> Unit
+    mealId: String, viewModel: MealViewModel, onBack: () -> Unit
 ) {
     val meal by viewModel.selectedMeal.collectAsState()
     val isLoading by viewModel.mealDetailsLoading.collectAsState()
@@ -24,23 +22,19 @@ fun MealDetailScreen(
         viewModel.fetchMealDetails(mealId)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(meal?.strMeal ?: "Meal Details", color = Color.White) },
-                backgroundColor = Color(0xFF6751A5),
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
+    Scaffold(topBar = {
+        TopAppBar(title = { Text(meal?.strMeal ?: "Meal Details", color = Color.White) },
+            backgroundColor = Color(0xFF6751A5),
+            navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = Color.White
+                    )
                 }
-            )
-        }
-    ) { paddingValues ->
+            })
+    }) { paddingValues ->
         if (isLoading) {
             Box(
                 modifier = Modifier
@@ -54,8 +48,7 @@ fun MealDetailScreen(
             meal?.let {
                 MealContent(meal = it)
             } ?: Text(
-                "Meal details not found.",
-                modifier = Modifier.padding(paddingValues)
+                "Meal details not found.", modifier = Modifier.padding(paddingValues)
             )
         }
     }

@@ -41,18 +41,20 @@ fun InputIngredientsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(20.dp)
         ) {
-            MealSearchBar(
-                searchQuery = ingredientName,
+            MealSearchBar(searchQuery = ingredientName,
                 onSearchQueryChange = { newValue ->
                     ingredientName = newValue
                     ingredientsAddedState.name = newValue
                 },
                 onSearch = {
                     if (ingredientName.isNotBlank()) {
+                        val transformedName =
+                            ingredientName.lowercase().replaceFirstChar { it.uppercaseChar() }
+
                         try {
-                            val ingredient = LocalIngredients(ingredients = ingredientName)
+                            val ingredient = LocalIngredients(ingredients = transformedName)
                             ingredientState.add(ingredient)
                             ingredientState.refresh()
                             Toast.makeText(
@@ -73,6 +75,8 @@ fun InputIngredientsScreen(
                 buttonText = "Add"
             )
 
+
+
             Text(
                 text = "Saved Ingredients:",
                 style = MaterialTheme.typography.h6,
@@ -84,8 +88,7 @@ fun InputIngredientsScreen(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            IngredientList(
-                ingredients = ingredientState.ingredients,
+            IngredientList(ingredients = ingredientState.ingredients,
                 onIngredientClick = { ingredientText ->
                     selectedIngredient = ingredientText
                     viewModel.fetchMealsByIngredient(ingredientText)
@@ -96,13 +99,10 @@ fun InputIngredientsScreen(
                         Toast.makeText(context, "Ingredient deleted", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
                         Toast.makeText(
-                            context,
-                            "Error deleting ingredient: ${e.message}",
-                            Toast.LENGTH_SHORT
+                            context, "Error deleting ingredient: ${e.message}", Toast.LENGTH_SHORT
                         ).show()
                     }
-                }
-            )
+                })
 
             Spacer(modifier = Modifier.height(24.dp))
 

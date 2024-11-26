@@ -46,18 +46,12 @@ fun CategorySelector(
                 )
             }
         }
-        DropdownMenu(
-            expanded = dropdownExpanded,
-            onDismissRequest = { dropdownExpanded = false }
-        ) {
+        DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
             categories.forEach { category ->
-                DropdownMenuItem(
-                    onClick = {
-                        onCategorySelected(category)
-                        dropdownExpanded = false
-                    },
-                    text = { Text(category) }
-                )
+                DropdownMenuItem(onClick = {
+                    onCategorySelected(category)
+                    dropdownExpanded = false
+                }, text = { Text(category) })
             }
         }
     }

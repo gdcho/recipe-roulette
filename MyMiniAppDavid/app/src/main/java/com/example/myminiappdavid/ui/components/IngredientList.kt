@@ -4,15 +4,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.myminiappdavid.data.LocalIngredients
 
@@ -29,7 +30,7 @@ fun IngredientList(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .padding(vertical = 10.dp, horizontal = 5.dp)
                     .clickable {
                         ingredient.ingredients?.let { ingredientText ->
                             onIngredientClick(ingredientText)
@@ -44,22 +45,17 @@ fun IngredientList(
                     modifier = Modifier.weight(1f)
                 )
 
-                Button(
-                    onClick = { onDeleteClick(ingredient) },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
-                    modifier = Modifier.size(25.dp),
-                    contentPadding = PaddingValues(0.dp)
+                IconButton(
+                    onClick = { onDeleteClick(ingredient) }, modifier = Modifier.size(20.dp)
                 ) {
-                    Text(
-                        "X",
-                        style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
+                    Icon(
+                        imageVector = Icons.Default.Clear, contentDescription = "View Details"
                     )
                 }
             }
 
             Divider(
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
-                thickness = 1.dp
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f), thickness = 1.dp
             )
         }
     }
