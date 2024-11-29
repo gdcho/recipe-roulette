@@ -11,34 +11,61 @@ import kotlinx.serialization.json.Json
 class MealApiService {
     private val client = HttpClient {
         install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-            })
+            json(Json { ignoreUnknownKeys = true })
         }
     }
 
-    suspend fun getRandomMeal(): MealResponse {
-        return client.get("https://www.themealdb.com/api/json/v1/1/random.php").body()
+    private val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
+
+    private fun encodeQueryParam(param: String): String {
+        return java.net.URLEncoder.encode(param, "UTF-8")
     }
 
-    suspend fun getMealsByCategory(category: String): MealsListResponse {
-        return client.get("https://www.themealdb.com/api/json/v1/1/filter.php?c=$category").body()
+    suspend fun getRandomMeal(): MealResponse? {
+        return try {
+            client.get("${BASE_URL}random.php").body()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    suspend fun searchMealsByName(query: String): MealResponse {
-        val encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
-        return client.get("https://www.themealdb.com/api/json/v1/1/search.php?s=$encodedQuery")
-            .body()
+    suspend fun getMealsByCategory(category: String): MealsListResponse? {
+        return try {
+            client.get("${BASE_URL}filter.php?c=$category").body()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    suspend fun getMealsByIngredient(ingredient: String): MealsListResponse {
-        val encodedIngredient = java.net.URLEncoder.encode(ingredient, "UTF-8")
-        return client.get("https://www.themealdb.com/api/json/v1/1/filter.php?i=$encodedIngredient")
-            .body()
+    suspend fun searchMealsByName(query: String): MealResponse? {
+        val encodedQuery = encodeQueryParam(query)
+        return try {
+            client.get("${BASE_URL}search.php?s=$encodedQuery").body()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
-    suspend fun getMealDetails(id: String): MealResponse {
-        return client.get("https://www.themealdb.com/api/json/v1/1/lookup.php?i=$id").body()
+    suspend fun getMealsByIngredient(ingredient: String): MealsListResponse? {
+        val encodedIngredient = encodeQueryParam(ingredient)
+        return try {
+            client.get("${BASE_URL}filter.php?i=$encodedIngredient").body()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun getMealDetails(id: String): MealResponse? {
+        return try {
+            client.get("${BASE_URL}lookup.php?i=$id").body()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }
 

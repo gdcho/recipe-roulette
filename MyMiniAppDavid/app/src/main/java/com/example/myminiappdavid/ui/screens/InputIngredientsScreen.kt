@@ -58,7 +58,7 @@ fun InputIngredientsScreen(
                             ingredientState.add(ingredient)
                             ingredientState.refresh()
                             Toast.makeText(
-                                context, "Ingredient added successfully", Toast.LENGTH_SHORT
+                                context, "Ingredient added", Toast.LENGTH_SHORT
                             ).show()
                         } catch (e: Exception) {
                             Toast.makeText(
@@ -74,8 +74,6 @@ fun InputIngredientsScreen(
                 placeholder = "Add ingredients",
                 buttonText = "Add"
             )
-
-
 
             Text(
                 text = "Saved Ingredients:",

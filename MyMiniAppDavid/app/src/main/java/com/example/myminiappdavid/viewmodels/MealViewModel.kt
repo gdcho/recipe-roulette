@@ -7,10 +7,8 @@ import com.example.myminiappdavid.api.MealApiService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.State
 
 
 class MealViewModel(private val mealApiService: MealApiService) : ViewModel() {
@@ -53,13 +51,12 @@ class MealViewModel(private val mealApiService: MealApiService) : ViewModel() {
             try {
                 _loading.value = true
                 val response = mealApiService.getRandomMeal()
-                Log.i("MealViewModel", "API Response: $response")
-                _randomMeal.value = response.meals.firstOrNull() ?: Meal(
+                _randomMeal.value = response?.meals?.firstOrNull() ?: Meal(
                     strMeal = "Unknown Meal", strMealThumb = "", idMeal = "N/A"
                 )
             } catch (e: Exception) {
-                _randomMeal.value = null // Handle gracefully
-                e.printStackTrace() // Log the exception for debugging
+                _randomMeal.value = null
+                e.printStackTrace()
             } finally {
                 _loading.value = false
             }
@@ -69,7 +66,7 @@ class MealViewModel(private val mealApiService: MealApiService) : ViewModel() {
     fun fetchMealsByCategory(category: String) {
         viewModelScope.launch {
             _loading.value = true
-            _filteredMeals.value = mealApiService.getMealsByCategory(category).meals
+            _filteredMeals.value = mealApiService.getMealsByCategory(category)!!.meals
             _loading.value = false
         }
     }
@@ -79,7 +76,7 @@ class MealViewModel(private val mealApiService: MealApiService) : ViewModel() {
             try {
                 _searchLoading.value = true
                 val response = mealApiService.searchMealsByName(query)
-                _searchResults.value = response.meals ?: emptyList()
+                _searchResults.value = response?.meals ?: emptyList()
             } catch (e: Exception) {
                 _searchResults.value = emptyList()
                 e.printStackTrace()
@@ -98,7 +95,7 @@ class MealViewModel(private val mealApiService: MealApiService) : ViewModel() {
             try {
                 _ingredientLoading.value = true
                 val response = mealApiService.getMealsByIngredient(ingredient)
-                _mealsByIngredient.value = response.meals
+                _mealsByIngredient.value = response!!.meals
             } catch (e: Exception) {
                 _mealsByIngredient.value = emptyList()
                 e.printStackTrace()
@@ -113,7 +110,7 @@ class MealViewModel(private val mealApiService: MealApiService) : ViewModel() {
             try {
                 _mealDetailsLoading.value = true
                 val response = mealApiService.getMealDetails(id)
-                _selectedMeal.value = response.meals.firstOrNull()
+                _selectedMeal.value = response?.meals?.firstOrNull()
             } catch (e: Exception) {
                 _selectedMeal.value = null
                 e.printStackTrace()
